@@ -1,10 +1,12 @@
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
-import counterReducer from "../features/words/wordsSlice";
+import settingsReducer from "../features/settings/settingsSlice";
+import wordsReducer from "../features/words/wordsSlice";
 import { loadState, saveState } from "./store.logic";
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
+    words: wordsReducer,
+    settings: settingsReducer,
   },
   preloadedState: loadState(),
 });

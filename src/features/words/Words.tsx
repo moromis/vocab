@@ -8,11 +8,13 @@ export function Words() {
 
   return (
     <table>
-      <tr>
-        <th>Type</th>
-        <th>Word</th>
-        <th>Definition</th>
-      </tr>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Word</th>
+          <th>Definition</th>
+        </tr>
+      </thead>
       <tbody>
         {Object.entries(words).map(([key, value]) => (
           <Word key={key} name={key} info={value} />

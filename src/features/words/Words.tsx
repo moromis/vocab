@@ -9,12 +9,13 @@ export function Words() {
   return (
     <table>
       <tr>
+        <th>Type</th>
         <th>Word</th>
         <th>Definition</th>
       </tr>
       <tbody>
         {Object.entries(words).map(([key, value]) => (
-          <Word key={key} name={key} definition={value} />
+          <Word key={key} name={key} info={value} />
         ))}
       </tbody>
     </table>

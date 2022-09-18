@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
+import { WordInfo } from "./words.types";
 
 export interface CounterState {
-  words: Record<string, string>;
+  words: Record<string, WordInfo>;
 }
 
 const initialState: CounterState = {
@@ -14,7 +15,10 @@ export const wordsSlice = createSlice({
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    addWord: (state, action: PayloadAction<{ key: string; value: string }>) => {
+    addWord: (
+      state,
+      action: PayloadAction<{ key: string; value: WordInfo }>
+    ) => {
       // Redux Toolkit allows us to write "mutating" logic in reducers. It
       // doesn't actually mutate the state because it uses the Immer library,
       // which detects changes to a "draft state" and produces a brand new

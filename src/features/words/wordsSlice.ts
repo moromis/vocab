@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import * as R from "ramda";
 import { RootState } from "../../app/store";
-import { WordInfo } from "./words.types";
+import { WordType } from "./words.types";
 
 export const partsOfSpeech = [
   "unknown",
@@ -12,12 +13,12 @@ export const partsOfSpeech = [
 ];
 
 export interface WordsState {
-  words: Record<string, WordInfo>;
+  words: WordType[];
   selectedType: string;
 }
 
 const initialState: WordsState = {
-  words: {},
+  words: [],
   selectedType: partsOfSpeech[0],
 };
 
@@ -25,18 +26,34 @@ export const wordsSlice = createSlice({
   name: "words",
   initialState,
   reducers: {
-    addWord: (
-      state,
-      action: PayloadAction<{ key: string; value: WordInfo }>
-    ) => {
-      const { key, value } = action.payload;
-      state.words[key] = value;
+    addWord: (state, action: PayloadAction<WordType>) => {
+      if (
+        !state.words.some(
+          (x) =>
+            x.word === action.payload.word &&
+            x.language === action.payload.language
+        )
+      )
+        state.words = [...state.words, action.payload];
+    },
+    changeWord: (state, action: PayloadAction<WordType>) => {
+      const oldWords = R.clone(state.words);
+      state.words = [
+        ...oldWords.filter(
+          (x) =>
+            !(
+              x.word === action.payload.word &&
+              x.language === action.payload.language
+            )
+        ),
+        action.payload,
+      ];
     },
     removeWord: (state, action: PayloadAction<string>) => {
-      delete state.words[action.payload];
+      state.words = state.words.filter((x) => x.word !== action.payload);
     },
     clearWords: (state) => {
-      state.words = {};
+      state.words = [];
     },
     setType: (state, action: PayloadAction<string>) => {
       state.selectedType = action.payload;
@@ -44,7 +61,8 @@ export const wordsSlice = createSlice({
   },
 });
 
-export const { addWord, removeWord, clearWords, setType } = wordsSlice.actions;
+export const { addWord, changeWord, removeWord, clearWords, setType } =
+  wordsSlice.actions;
 
 export const selectWords = (state: RootState) => state.words.words;
 export const selectType = (state: RootState) => state.words.selectedType;

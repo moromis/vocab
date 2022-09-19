@@ -8,14 +8,28 @@ import {
   TablePagination,
   TableRow,
 } from "@mui/material";
+import Fuse from "fuse.js";
 import { useState } from "react";
 import { useAppSelector } from "../../app/hooks";
+import { selectSearch } from "../search/searchSlice";
 import { Word } from "./Word";
 import "./Words.module.css";
 import { selectWords } from "./wordsSlice";
 
+const fuseOptions = {
+  // Search in `author` and in `tags` array
+  keys: ["word", "type", "definition", "valuelanguage"],
+};
+
 export function Words() {
   const words = useAppSelector(selectWords);
+  const search = useAppSelector(selectSearch);
+
+  let filteredWords = words;
+  if (search.length) {
+    const fuse = new Fuse(words, fuseOptions);
+    filteredWords = fuse.search(search).map((x) => x.item);
+  }
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -46,8 +60,8 @@ export function Words() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {Object.entries(words).map(([key, value]) => (
-              <Word key={key} name={key} info={value} />
+            {filteredWords.map((word) => (
+              <Word key={word.word} wordInfo={word} />
             ))}
           </TableBody>
         </Table>
@@ -55,7 +69,7 @@ export function Words() {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={Object.values(words).length || 0}
+        count={Object.values(filteredWords).length || 0}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

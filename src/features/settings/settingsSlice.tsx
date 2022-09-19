@@ -5,12 +5,12 @@ export const getCommonWordsFromLanguage = (l: string) => {
   return import(`../../data/${l}`).then((module) => module.default);
 };
 
-export interface CounterState {
+export interface SettingsState {
   language: string;
   authToken: string | null;
 }
 
-const initialState: CounterState = {
+const initialState: SettingsState = {
   language: "",
   authToken: null,
 };

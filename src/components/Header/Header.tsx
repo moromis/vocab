@@ -9,6 +9,7 @@ import {
   IconButton,
   InputLabel,
   MenuItem,
+  OutlinedInput,
   Popper,
   Select,
   styled,
@@ -21,6 +22,7 @@ import { TransitionProps } from "@mui/material/transitions";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { selectSearch, setSearch } from "../../features/search/searchSlice";
 import { Settings } from "../../features/settings/Settings";
 import { GOOGLE_CLIENT_ID } from "../../features/settings/settings.const";
 import {
@@ -62,6 +64,7 @@ export function Header() {
   const words = useAppSelector(selectWords);
   const type = useAppSelector(selectType);
   const { language, authToken } = useAppSelector(selectSettings);
+  const search = useAppSelector(selectSearch);
   const dispatch = useAppDispatch();
 
   const [key, setKey] = useState("");
@@ -88,11 +91,9 @@ export function Header() {
     setKey("");
     dispatch(
       addWord({
-        key,
-        value: {
-          type,
-          language: language && language.length ? language : null,
-        },
+        word: key,
+        type,
+        language: language && language.length ? language : null,
       })
     );
   };
@@ -160,27 +161,42 @@ export function Header() {
           />
         )}
         <Button
+          sx={{ marginRight: 2 }}
           className={styles.button}
           aria-label="Add Word"
           onClick={submit}
           variant="contained"
-          disabled={!key || key.length === 0 || key in words}
+          disabled={
+            !key || key.length === 0 || words.some((x) => x.word === key)
+          }
         >
           Add Word
         </Button>
-        {key in words && (
+        {words.some((x) => x.word === key) && (
           <p style={{ color: "red" }}>Word is already in dictionary</p>
         )}
       </div>
-      <IconButton
-        id="settings-button"
-        onClick={handleOpen}
-        aria-controls={settingsDialogOpen ? "settings-dialog" : undefined}
-        aria-haspopup="true"
-        aria-expanded={settingsDialogOpen ? "true" : undefined}
-      >
-        <SettingsIcon fontSize="large" />
-      </IconButton>
+      <div>
+        <OutlinedInput
+          placeholder="Search"
+          endAdornment={
+            <IconButton>
+              <Close />
+            </IconButton>
+          }
+          value={search}
+          onChange={(e) => dispatch(setSearch(e.target.value))}
+        />
+        <IconButton
+          id="settings-button"
+          onClick={handleOpen}
+          aria-controls={settingsDialogOpen ? "settings-dialog" : undefined}
+          aria-haspopup="true"
+          aria-expanded={settingsDialogOpen ? "true" : undefined}
+        >
+          <SettingsIcon fontSize="large" />
+        </IconButton>
+      </div>
       <Dialog
         fullScreen
         open={settingsDialogOpen}

@@ -13,19 +13,16 @@ import { titleCase } from "title-case";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { ISO_LANGUAGE_CODES } from "../settings/settings.const";
 import { selectSettings, setAuthToken } from "../settings/settingsSlice";
-import { WordInfo } from "./words.types";
-import { addWord, removeWord } from "./wordsSlice";
+import { WordType } from "./words.types";
+import { changeWord, removeWord } from "./wordsSlice";
 
-export const Word = ({ name, info }: { name: string; info: WordInfo }) => {
+export const Word = ({ wordInfo }: { wordInfo: WordType }) => {
+  const { definition, language, type, word } = wordInfo;
   const dispatch = useAppDispatch();
   const settings = useAppSelector(selectSettings);
 
   useEffect(() => {
-    if (
-      settings.authToken &&
-      !info.definition &&
-      (info.language || settings.language)
-    ) {
+    if (settings.authToken && !definition && (language || settings.language)) {
       // get definition
       fetch("https://translation.googleapis.com/language/translate/v2", {
         method: "POST",
@@ -34,9 +31,9 @@ export const Word = ({ name, info }: { name: string; info: WordInfo }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          source: ISO_LANGUAGE_CODES[info.language || settings.language],
+          source: ISO_LANGUAGE_CODES[language || settings.language],
           target: "en",
-          q: name,
+          q: word,
           format: "text",
         }),
       })
@@ -44,16 +41,13 @@ export const Word = ({ name, info }: { name: string; info: WordInfo }) => {
           res.json().then((jsonData) => {
             const definition = jsonData.data.translations[0].translatedText;
             dispatch(
-              addWord({
-                key: name,
-                value: {
-                  ...info,
-                  definition,
-                  language:
-                    settings.language && settings.language.length
-                      ? settings.language
-                      : null,
-                },
+              changeWord({
+                ...wordInfo,
+                definition,
+                language:
+                  settings.language && settings.language.length
+                    ? settings.language
+                    : null,
               })
             );
           });
@@ -67,7 +61,7 @@ export const Word = ({ name, info }: { name: string; info: WordInfo }) => {
   }, [settings.authToken]);
 
   const remove = () => {
-    dispatch(removeWord(name));
+    dispatch(removeWord(word));
   };
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -78,13 +72,11 @@ export const Word = ({ name, info }: { name: string; info: WordInfo }) => {
 
   return (
     <StyledTableRow>
-      <TableCell>{titleCase(info.language || "")}</TableCell>
-      <TableCell>{titleCase(info.type)}</TableCell>
-      <TableCell>{name}</TableCell>
-      <TableCell
-        sx={{ ...(info.definition ? {} : { justifyContent: "center" }) }}
-      >
-        {info.definition || (
+      <TableCell>{titleCase(language || "")}</TableCell>
+      <TableCell>{titleCase(type)}</TableCell>
+      <TableCell>{word}</TableCell>
+      <TableCell sx={{ ...(definition ? {} : { justifyContent: "center" }) }}>
+        {definition || (
           <Tooltip
             title={
               <Typography sx={{ fontSize: "1rem" }}>
@@ -100,8 +92,8 @@ export const Word = ({ name, info }: { name: string; info: WordInfo }) => {
       <TableCell>
         <Link
           href={`https://translate.google.com/?sl=${
-            ISO_LANGUAGE_CODES[info.language || settings.language]
-          }&tl=en&text=${name}&op=translate`}
+            ISO_LANGUAGE_CODES[language || settings.language]
+          }&tl=en&text=${word}&op=translate`}
           target="_blank"
         >
           Translation

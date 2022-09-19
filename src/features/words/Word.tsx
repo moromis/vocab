@@ -1,5 +1,5 @@
 import { Close } from "@mui/icons-material";
-import { IconButton, Link, TableCell, TableRow } from "@mui/material";
+import { IconButton, Link, styled, TableCell, TableRow } from "@mui/material";
 import { useEffect } from "react";
 import { titleCase } from "title-case";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -55,8 +55,14 @@ export const Word = ({ name, info }: { name: string; info: WordInfo }) => {
     dispatch(removeWord(name));
   };
 
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    "&:nth-of-type(odd)": {
+      backgroundColor: theme.palette.action.hover,
+    },
+  }));
+
   return (
-    <TableRow>
+    <StyledTableRow>
       <TableCell>{titleCase(info.language || "")}</TableCell>
       <TableCell>{titleCase(info.type)}</TableCell>
       <TableCell>{name}</TableCell>
@@ -76,6 +82,6 @@ export const Word = ({ name, info }: { name: string; info: WordInfo }) => {
           <Close />
         </IconButton>
       </TableCell>
-    </TableRow>
+    </StyledTableRow>
   );
 };

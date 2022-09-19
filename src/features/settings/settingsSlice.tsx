@@ -76,7 +76,7 @@ export const settingsSlice = createSlice({
     setLanguage: (state, action: PayloadAction<string>) => {
       state.language = action.payload;
     },
-    setAuthToken: (state, action: PayloadAction<string>) => {
+    setAuthToken: (state, action: PayloadAction<string | null>) => {
       state.authToken = action.payload;
     },
   },

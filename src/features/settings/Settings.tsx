@@ -1,17 +1,15 @@
-import { GoogleLogin, GoogleLogout } from "@leecheuk/react-google-login";
-import { Grid, InputLabel, MenuItem, Select } from "@mui/material";
+import { GoogleLogin, useGoogleLogout } from "@leecheuk/react-google-login";
+import { Button, Grid, InputLabel, MenuItem, Select } from "@mui/material";
 import { gapi } from "gapi-script";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { GOOGLE_CLIENT_ID } from "./settings.const";
 import {
   LANGUAGE_OPTIONS,
   selectSettings,
   setAuthToken,
   setLanguage,
 } from "./settingsSlice";
-
-const clientId =
-  "704609242086-dabkajm8tj8crsgcs2lvecej4qaimi02.apps.googleusercontent.com";
 
 export const Settings = () => {
   const settings = useAppSelector(selectSettings);
@@ -29,7 +27,7 @@ export const Settings = () => {
     if (settings.authToken === null) {
       const initClient = () => {
         gapi.client.init({
-          clientId: clientId,
+          clientId: GOOGLE_CLIENT_ID,
           scope:
             "email profile openid https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/cloud-translation",
         });
@@ -37,6 +35,23 @@ export const Settings = () => {
       gapi.load("client:auth2", initClient);
     }
   });
+
+  const logoutSuccess = () => {
+    console.log("logged out");
+    dispatch(setAuthToken(null));
+  };
+  const logoutFailure = () => {
+    console.log("logout failed");
+  };
+  const { signOut } = useGoogleLogout({
+    clientId: GOOGLE_CLIENT_ID,
+    onLogoutSuccess: logoutSuccess,
+    onFailure: logoutFailure,
+  });
+
+  const logout = () => {
+    signOut();
+  };
 
   return (
     <Grid
@@ -51,7 +66,7 @@ export const Settings = () => {
       <Grid item>
         {settings.authToken === null ? (
           <GoogleLogin
-            clientId={clientId}
+            clientId={GOOGLE_CLIENT_ID}
             buttonText="Sign in with Google"
             onSuccess={onSuccess}
             onFailure={onFailure}
@@ -59,7 +74,7 @@ export const Settings = () => {
             isSignedIn={true}
           />
         ) : (
-          <GoogleLogout clientId={clientId} />
+          <Button onClick={logout}>Logout</Button>
         )}
       </Grid>
       <Grid item>

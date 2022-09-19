@@ -5,7 +5,8 @@ import {
   Button,
   Dialog,
   IconButton,
-  Link,
+  MenuItem,
+  Select,
   TextField,
   Toolbar,
   Typography,
@@ -44,7 +45,6 @@ export function Header() {
   const dispatch = useAppDispatch();
 
   const [key, setKey] = useState("");
-  const [definition, setDefinition] = useState("");
   const [settingsDialogOpen, setSettingsDialogOpen] = useState<boolean>(false);
   const [options, setOptions] = useState<string[] | null>(null);
 
@@ -66,8 +66,7 @@ export function Header() {
 
   const submit = () => {
     setKey("");
-    setDefinition("");
-    dispatch(addWord({ key, value: { type, definition } }));
+    dispatch(addWord({ key, value: { type } }));
   };
 
   return (
@@ -76,19 +75,20 @@ export function Header() {
         <label className={styles.label} htmlFor="key">
           Type
         </label>
-        <select
+        <Select
           id="type"
           aria-label="Set type"
           value={type}
           onChange={(e) => dispatch(setType(e.target.value))}
           className={styles.select}
+          sx={{ marginRight: 2 }}
         >
           {wordTypes.map((t) => (
-            <option key={t} value={t}>
+            <MenuItem key={t} value={t}>
               {t.charAt(0).toUpperCase() + t.slice(1)}
-            </option>
+            </MenuItem>
           ))}
-        </select>
+        </Select>
         <label className={styles.label} htmlFor="key">
           Word
         </label>
@@ -102,41 +102,23 @@ export function Header() {
             freeSolo
           />
         ) : (
-          <textarea
+          <TextField
             id="key"
+            sx={{ marginRight: 2 }}
             className={styles.textbox}
             aria-label="Set word"
             value={key}
             onChange={(e) => setKey(e.target.value)}
           />
         )}
-        {key && key.length && (
-          <Link
-            href={`https://translate.google.com/?sl=it&tl=en&text=${key}&op=translate`}
-            target="_blank"
-            sx={{ fontSize: "1.5rem", marginRight: 2 }}
-          >
-            Translation
-          </Link>
-        )}
-        <label className={styles.label} htmlFor="value">
-          Definition
-        </label>
-        <textarea
-          id="key"
-          className={styles.textbox}
-          aria-label="Set Definition"
-          value={definition}
-          onChange={(e) => setDefinition(e.target.value)}
-        />
-        <button
+        <Button
           className={styles.button}
           aria-label="Add Word"
           onClick={submit}
-          disabled={!definition || definition === ""}
+          variant="contained"
         >
           {key in words ? "Change Definition" : "Add Word"}
-        </button>
+        </Button>
         {key in words && (
           <p style={{ color: "red" }}>Word is already in dictionary</p>
         )}

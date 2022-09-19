@@ -11,8 +11,7 @@ import {
 } from "@mui/material";
 import { useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { store } from "../../app/store";
-import { clearLocalStorage, loadStateFromGoogle } from "../../app/store.logic";
+import { clearLocalStorage } from "../../app/store.logic";
 import { SelectLanguage } from "../../components/SelectLanguage";
 import { clearWords } from "../words/wordsSlice";
 import { GOOGLE_CLIENT_ID } from "./settings.const";
@@ -28,7 +27,7 @@ export const Settings = () => {
   const onSuccess = (res: any) => {
     console.log("success:", res);
     dispatch(setAuthToken(res.accessToken));
-    loadStateFromGoogle(store.getState(), store.dispatch);
+    // loadStateFromGoogle(store.getState(), store.dispatch);
   };
   const onFailure = (err: any) => {
     console.log("failed:", err);

@@ -21,3 +21,9 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# python data scripts
+src/data/*.py
+
+# data resources
+src/data/resources

@@ -16,10 +16,12 @@ export const LANGUAGES_MAP: LanguagesMap = {
 
 export interface CounterState {
   language: string;
+  authToken: string | null;
 }
 
 const initialState: CounterState = {
   language: "",
+  authToken: null,
 };
 
 export const settingsSlice = createSlice({
@@ -30,11 +32,16 @@ export const settingsSlice = createSlice({
     setLanguage: (state, action: PayloadAction<string>) => {
       state.language = action.payload;
     },
+    setAuthToken: (state, action: PayloadAction<string>) => {
+      state.authToken = action.payload;
+    },
   },
 });
 
-export const { setLanguage } = settingsSlice.actions;
+export const { setLanguage, setAuthToken } = settingsSlice.actions;
 
+export const selectSettings = (state: RootState) => state.settings;
 export const selectLanguage = (state: RootState) => state.settings.language;
+export const selectAuthToken = (state: RootState) => state.settings.authToken;
 
 export default settingsSlice.reducer;

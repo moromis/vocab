@@ -50,18 +50,7 @@
 }
 
 .button {
-  appearance: none;
-  background: none;
   font-size: 1.5rem;
-  padding-left: 12px;
-  padding-right: 12px;
-  outline: none;
-  border: 2px solid transparent;
-  padding-bottom: 4px;
-  cursor: pointer;
-  background-color: rgba(112, 76, 182, 0.1);
-  border-radius: 2px;
-  transition: all 0.15s;
 }
 
 .textbox {
@@ -70,13 +59,4 @@
 
 .select {
   font-size: 1.5rem;
-}
-
-.button:hover,
-.button:focus {
-  border: 2px solid black;
-}
-
-.button:active {
-  background-color: rgba(112, 76, 182, 0.2);
 }

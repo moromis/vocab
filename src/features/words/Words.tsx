@@ -13,6 +13,7 @@ export function Words() {
           <th>Type</th>
           <th>Word</th>
           <th>Definition</th>
+          <th>Link</th>
         </tr>
       </thead>
       <tbody>

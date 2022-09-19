@@ -11,11 +11,8 @@ import {
 import { useEffect } from "react";
 import { titleCase } from "title-case";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import {
-  LANGUAGE_TO_KEY,
-  selectSettings,
-  setAuthToken,
-} from "../settings/settingsSlice";
+import { ISO_LANGUAGE_CODES } from "../settings/settings.const";
+import { selectSettings, setAuthToken } from "../settings/settingsSlice";
 import { WordInfo } from "./words.types";
 import { addWord, removeWord } from "./wordsSlice";
 
@@ -37,7 +34,7 @@ export const Word = ({ name, info }: { name: string; info: WordInfo }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          source: LANGUAGE_TO_KEY[info.language || settings.language],
+          source: ISO_LANGUAGE_CODES[info.language || settings.language],
           target: "en",
           q: name,
           format: "text",
@@ -103,7 +100,7 @@ export const Word = ({ name, info }: { name: string; info: WordInfo }) => {
       <TableCell>
         <Link
           href={`https://translate.google.com/?sl=${
-            LANGUAGE_TO_KEY[info.language || settings.language]
+            ISO_LANGUAGE_CODES[info.language || settings.language]
           }&tl=en&text=${name}&op=translate`}
           target="_blank"
         >

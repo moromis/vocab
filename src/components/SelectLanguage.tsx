@@ -1,7 +1,7 @@
 import { InputLabel, MenuItem, Select } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { LANGUAGE_OPTIONS } from "../features/settings/settings.const";
 import {
-  LANGUAGE_OPTIONS,
   selectSettings,
   setLanguage,
 } from "../features/settings/settingsSlice";

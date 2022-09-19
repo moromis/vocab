@@ -27,3 +27,6 @@ src/data/*.py
 
 # data resources
 src/data/resources
+
+# data json
+src/data/*.json

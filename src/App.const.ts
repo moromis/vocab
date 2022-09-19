@@ -6,4 +6,6 @@ export const GOOGLE_API_SCOPES = [
   "https://www.googleapis.com/auth/userinfo.email",
   "https://www.googleapis.com/auth/cloud-translation",
   "https://www.googleapis.com/auth/drive.appdata",
+  "https://www.googleapis.com/auth/drive",
+  "https://www.googleapis.com/auth/drive.file",
 ];

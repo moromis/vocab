@@ -12,7 +12,8 @@ export const store = configureStore({
 });
 
 store.subscribe(() => {
-  saveState(store.getState());
+  const state = store.getState();
+  saveState(state);
 });
 
 export type AppDispatch = typeof store.dispatch;

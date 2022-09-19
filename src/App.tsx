@@ -1,5 +1,6 @@
 import { gapi } from "gapi-script";
 import { useEffect } from "react";
+import { GOOGLE_API_SCOPES } from "./App.const";
 import "./App.css";
 import { useAppSelector } from "./app/hooks";
 import { Header } from "./components/Header/Header";
@@ -16,8 +17,7 @@ function App() {
       const initClient = () => {
         gapi.client.init({
           clientId: GOOGLE_CLIENT_ID,
-          scope:
-            "email profile openid https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/cloud-translation",
+          scope: GOOGLE_API_SCOPES.join(" "),
         });
       };
       gapi.load("client:auth2", initClient);

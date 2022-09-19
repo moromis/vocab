@@ -35,13 +35,16 @@ export const wordsSlice = createSlice({
     removeWord: (state, action: PayloadAction<string>) => {
       delete state.words[action.payload];
     },
+    clearWords: (state) => {
+      state.words = {};
+    },
     setType: (state, action: PayloadAction<string>) => {
       state.selectedType = action.payload;
     },
   },
 });
 
-export const { addWord, removeWord, setType } = wordsSlice.actions;
+export const { addWord, removeWord, clearWords, setType } = wordsSlice.actions;
 
 export const selectWords = (state: RootState) => state.words.words;
 export const selectType = (state: RootState) => state.words.selectedType;

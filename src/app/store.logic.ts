@@ -16,3 +16,11 @@ export const loadState = () => {
     return undefined; // To use the defaults in the reducers
   }
 };
+
+export const clearState = () => {
+  localStorage.removeItem(STORE_KEY);
+};
+
+export const clearLocalStorage = () => {
+  localStorage.clear();
+};

@@ -1,9 +1,21 @@
-import { Close } from "@mui/icons-material";
-import { IconButton, Link, styled, TableCell, TableRow } from "@mui/material";
+import { Close, Help } from "@mui/icons-material";
+import {
+  IconButton,
+  Link,
+  styled,
+  TableCell,
+  TableRow,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { useEffect } from "react";
 import { titleCase } from "title-case";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { LANGUAGE_TO_KEY, selectSettings } from "../settings/settingsSlice";
+import {
+  LANGUAGE_TO_KEY,
+  selectSettings,
+  setAuthToken,
+} from "../settings/settingsSlice";
 import { WordInfo } from "./words.types";
 import { addWord, removeWord } from "./wordsSlice";
 
@@ -30,24 +42,30 @@ export const Word = ({ name, info }: { name: string; info: WordInfo }) => {
           q: name,
           format: "text",
         }),
-      }).then((res) => {
-        res.json().then((jsonData) => {
-          const definition = jsonData.data.translations[0].translatedText;
-          dispatch(
-            addWord({
-              key: name,
-              value: {
-                ...info,
-                definition,
-                language:
-                  settings.language && settings.language.length
-                    ? settings.language
-                    : null,
-              },
-            })
-          );
+      })
+        .then((res) => {
+          res.json().then((jsonData) => {
+            const definition = jsonData.data.translations[0].translatedText;
+            dispatch(
+              addWord({
+                key: name,
+                value: {
+                  ...info,
+                  definition,
+                  language:
+                    settings.language && settings.language.length
+                      ? settings.language
+                      : null,
+                },
+              })
+            );
+          });
+        })
+        .catch((e) => {
+          // TODO: clear auth token only on 401, also retry or cause token refresh so this gets retried?
+          console.error("failed to get translation... ", e);
+          dispatch(setAuthToken(null));
         });
-      });
     }
   }, [settings.authToken]);
 
@@ -66,7 +84,22 @@ export const Word = ({ name, info }: { name: string; info: WordInfo }) => {
       <TableCell>{titleCase(info.language || "")}</TableCell>
       <TableCell>{titleCase(info.type)}</TableCell>
       <TableCell>{name}</TableCell>
-      <TableCell>{info.definition}</TableCell>
+      <TableCell
+        sx={{ ...(info.definition ? {} : { justifyContent: "center" }) }}
+      >
+        {info.definition || (
+          <Tooltip
+            title={
+              <Typography sx={{ fontSize: "1rem" }}>
+                Login to Google in settings to automatically add definitions
+              </Typography>
+            }
+            arrow
+          >
+            <Help />
+          </Tooltip>
+        )}
+      </TableCell>
       <TableCell>
         <Link
           href={`https://translate.google.com/?sl=${

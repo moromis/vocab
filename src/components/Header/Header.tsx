@@ -1,3 +1,4 @@
+import { useGoogleLogin } from "@leecheuk/react-google-login";
 import { Close, Settings as SettingsIcon } from "@mui/icons-material";
 import {
   AppBar,
@@ -6,6 +7,7 @@ import {
   Button,
   Dialog,
   IconButton,
+  InputLabel,
   MenuItem,
   Popper,
   Select,
@@ -16,12 +18,15 @@ import {
 } from "@mui/material";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
+import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Settings } from "../../features/settings/Settings";
+import { GOOGLE_CLIENT_ID } from "../../features/settings/settings.const";
 import {
   getCommonWordsFromLanguage,
-  selectLanguage,
+  selectSettings,
+  setAuthToken,
 } from "../../features/settings/settingsSlice";
 import {
   addWord,
@@ -30,6 +35,7 @@ import {
   selectWords,
   setType,
 } from "../../features/words/wordsSlice";
+import { SelectLanguage } from "../SelectLanguage";
 import styles from "./Header.module.css";
 import { ListboxComponent } from "./ListboxComponent";
 
@@ -55,7 +61,7 @@ const StyledPopper = styled(Popper)({
 export function Header() {
   const words = useAppSelector(selectWords);
   const type = useAppSelector(selectType);
-  const language = useAppSelector(selectLanguage);
+  const { language, authToken } = useAppSelector(selectSettings);
   const dispatch = useAppDispatch();
 
   const [key, setKey] = useState("");
@@ -91,12 +97,30 @@ export function Header() {
     );
   };
 
+  const onLoginSuccess = (res: any) => {
+    if (!authToken) {
+      console.log("success:", res);
+      dispatch(setAuthToken(res.accessToken));
+    }
+  };
+  const { signIn } = useGoogleLogin({
+    clientId: GOOGLE_CLIENT_ID,
+    onSuccess: onLoginSuccess,
+  });
+
+  useEffect(() => {
+    if (!authToken) {
+      signIn();
+    }
+  }, []);
+
   return (
     <div className={styles.header}>
       <div className={styles.addWord}>
-        <label className={styles.label} htmlFor="key">
-          Part of Speech
-        </label>
+        <Box sx={{ marginRight: 2, display: "flex", alignItems: "center" }}>
+          <SelectLanguage />
+        </Box>
+        <InputLabel htmlFor="key">Part of Speech</InputLabel>
         <Select
           id="type"
           aria-label="Set type"
@@ -111,9 +135,7 @@ export function Header() {
             </MenuItem>
           ))}
         </Select>
-        <label className={styles.label} htmlFor="key">
-          Word
-        </label>
+        <InputLabel htmlFor="key">Word</InputLabel>
         {type !== "" && options ? (
           <Autocomplete
             sx={{ marginRight: 2, width: 300 }}
@@ -125,10 +147,7 @@ export function Header() {
             renderInput={(params) => <TextField {...params} />}
             ListboxComponent={ListboxComponent}
             freeSolo
-            // groupBy={(option) => option[0].toUpperCase()}
             renderOption={(props, option) => [props, option] as React.ReactNode}
-            // TODO: Post React 18 update - validate this conversion, look like a hidden bug
-            // renderGroup={(params) => params as unknown as React.ReactNode}
           />
         ) : (
           <TextField
@@ -145,9 +164,9 @@ export function Header() {
           aria-label="Add Word"
           onClick={submit}
           variant="contained"
-          disabled={!key || key.length === 0}
+          disabled={!key || key.length === 0 || key in words}
         >
-          {key in words ? "Change Definition" : "Add Word"}
+          Add Word
         </Button>
         {key in words && (
           <p style={{ color: "red" }}>Word is already in dictionary</p>

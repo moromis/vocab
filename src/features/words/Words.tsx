@@ -1,3 +1,10 @@
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 import { useAppSelector } from "../../app/hooks";
 import { Word } from "./Word";
 import "./Words.module.css";
@@ -7,20 +14,22 @@ export function Words() {
   const words = useAppSelector(selectWords);
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Word</th>
-          <th>Definition</th>
-          <th>Link</th>
-        </tr>
-      </thead>
-      <tbody>
+    <Table>
+      <TableHead>
+        <TableRow>
+          <TableCell>Language</TableCell>
+          <TableCell>Part of Speech</TableCell>
+          <TableCell>Word</TableCell>
+          <TableCell>Definition</TableCell>
+          <TableCell>Link</TableCell>
+          <TableCell></TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
         {Object.entries(words).map(([key, value]) => (
           <Word key={key} name={key} info={value} />
         ))}
-      </tbody>
-    </table>
+      </TableBody>
+    </Table>
   );
 }

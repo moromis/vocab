@@ -1,5 +1,5 @@
 import "./App.css";
-import { Header } from "./components/Header";
+import { Header } from "./components/Header/Header";
 import { Words } from "./features/words/Words";
 
 function App() {

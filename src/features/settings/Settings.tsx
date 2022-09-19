@@ -4,7 +4,7 @@ import { gapi } from "gapi-script";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
-  LANGUAGES,
+  LANGUAGE_OPTIONS,
   selectSettings,
   setAuthToken,
   setLanguage,
@@ -75,11 +75,13 @@ export const Settings = () => {
           <MenuItem disabled value="">
             None
           </MenuItem>
-          {Object.entries(LANGUAGES).map(([name, value]) => (
-            <MenuItem key={value} value={value}>
-              {name}
-            </MenuItem>
-          ))}
+          {Object.entries(LANGUAGE_OPTIONS)
+            .sort()
+            .map(([name, value]) => (
+              <MenuItem key={value} value={value}>
+                {name}
+              </MenuItem>
+            ))}
         </Select>
       </Grid>
     </Grid>

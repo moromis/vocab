@@ -2,7 +2,14 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import { WordInfo } from "./words.types";
 
-export const wordTypes = ["verb", "adverb", "noun", "adjective", "preposition"];
+export const partsOfSpeech = [
+  "unknown",
+  "verb",
+  "adverb",
+  "noun",
+  "adjective",
+  "preposition",
+];
 
 export interface WordsState {
   words: Record<string, WordInfo>;
@@ -11,7 +18,7 @@ export interface WordsState {
 
 const initialState: WordsState = {
   words: {},
-  selectedType: wordTypes[0],
+  selectedType: partsOfSpeech[0],
 };
 
 export const wordsSlice = createSlice({

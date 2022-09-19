@@ -1,16 +1,22 @@
-import { Link } from "@mui/material";
+import { Close } from "@mui/icons-material";
+import { IconButton, Link, TableCell, TableRow } from "@mui/material";
 import { useEffect } from "react";
+import { titleCase } from "title-case";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { selectSettings } from "../settings/settingsSlice";
+import { LANGUAGE_TO_KEY, selectSettings } from "../settings/settingsSlice";
 import { WordInfo } from "./words.types";
-import { addWord } from "./wordsSlice";
+import { addWord, removeWord } from "./wordsSlice";
 
 export const Word = ({ name, info }: { name: string; info: WordInfo }) => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(selectSettings);
 
   useEffect(() => {
-    if (settings.authToken && !info.definition) {
+    if (
+      settings.authToken &&
+      !info.definition &&
+      (info.language || settings.language)
+    ) {
       // get definition
       fetch("https://translation.googleapis.com/language/translate/v2", {
         method: "POST",
@@ -19,7 +25,7 @@ export const Word = ({ name, info }: { name: string; info: WordInfo }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          source: settings.language,
+          source: LANGUAGE_TO_KEY[info.language || settings.language],
           target: "en",
           q: name,
           format: "text",
@@ -33,6 +39,10 @@ export const Word = ({ name, info }: { name: string; info: WordInfo }) => {
               value: {
                 ...info,
                 definition,
+                language:
+                  settings.language && settings.language.length
+                    ? settings.language
+                    : null,
               },
             })
           );
@@ -41,19 +51,31 @@ export const Word = ({ name, info }: { name: string; info: WordInfo }) => {
     }
   }, [settings.authToken]);
 
+  const remove = () => {
+    dispatch(removeWord(name));
+  };
+
   return (
-    <tr>
-      <td>{info.type}</td>
-      <td>{name}</td>
-      <td>{info.definition}</td>
-      <td>
+    <TableRow>
+      <TableCell>{titleCase(info.language || "")}</TableCell>
+      <TableCell>{titleCase(info.type)}</TableCell>
+      <TableCell>{name}</TableCell>
+      <TableCell>{info.definition}</TableCell>
+      <TableCell>
         <Link
-          href={`https://translate.google.com/?sl=it&tl=en&text=${name}&op=translate`}
+          href={`https://translate.google.com/?sl=${
+            LANGUAGE_TO_KEY[info.language || settings.language]
+          }&tl=en&text=${name}&op=translate`}
           target="_blank"
         >
           Translation
         </Link>
-      </td>
-    </tr>
+      </TableCell>
+      <TableCell sx={{ display: "flex", justifyContent: "center" }}>
+        <IconButton onClick={remove}>
+          <Close />
+        </IconButton>
+      </TableCell>
+    </TableRow>
   );
 };

@@ -2,11 +2,14 @@ import { Close, Settings as SettingsIcon } from "@mui/icons-material";
 import {
   AppBar,
   Autocomplete,
+  autocompleteClasses,
   Button,
   Dialog,
   IconButton,
   MenuItem,
+  Popper,
   Select,
+  styled,
   TextField,
   Toolbar,
   Typography,
@@ -14,20 +17,21 @@ import {
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
 import React, { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { Settings } from "../features/settings/Settings";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { Settings } from "../../features/settings/Settings";
 import {
-  LANGUAGES_MAP,
+  getCommonWordsFromLanguage,
   selectLanguage,
-} from "../features/settings/settingsSlice";
+} from "../../features/settings/settingsSlice";
 import {
   addWord,
+  partsOfSpeech,
   selectType,
   selectWords,
   setType,
-  wordTypes,
-} from "../features/words/wordsSlice";
+} from "../../features/words/wordsSlice";
 import styles from "./Header.module.css";
+import { ListboxComponent } from "./ListboxComponent";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -36,6 +40,16 @@ const Transition = React.forwardRef(function Transition(
   ref: React.Ref<unknown>
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
+});
+
+const StyledPopper = styled(Popper)({
+  [`& .${autocompleteClasses.listbox}`]: {
+    boxSizing: "border-box",
+    "& ul": {
+      padding: 0,
+      margin: 0,
+    },
+  },
 });
 
 export function Header() {
@@ -50,7 +64,7 @@ export function Header() {
 
   useEffect(() => {
     if (language && language.length) {
-      LANGUAGES_MAP[language]().then((res) => {
+      getCommonWordsFromLanguage(language).then((res: any) => {
         setOptions(res);
       });
     }
@@ -66,14 +80,22 @@ export function Header() {
 
   const submit = () => {
     setKey("");
-    dispatch(addWord({ key, value: { type } }));
+    dispatch(
+      addWord({
+        key,
+        value: {
+          type,
+          language: language && language.length ? language : null,
+        },
+      })
+    );
   };
 
   return (
     <div className={styles.header}>
       <div className={styles.addWord}>
         <label className={styles.label} htmlFor="key">
-          Type
+          Part of Speech
         </label>
         <Select
           id="type"
@@ -83,7 +105,7 @@ export function Header() {
           className={styles.select}
           sx={{ marginRight: 2 }}
         >
-          {wordTypes.map((t) => (
+          {partsOfSpeech.map((t) => (
             <MenuItem key={t} value={t}>
               {t.charAt(0).toUpperCase() + t.slice(1)}
             </MenuItem>
@@ -94,12 +116,19 @@ export function Header() {
         </label>
         {type !== "" && options ? (
           <Autocomplete
-            sx={{ marginRight: 2 }}
+            sx={{ marginRight: 2, width: 300 }}
+            disableListWrap
+            PopperComponent={StyledPopper}
             value={key}
             onChange={(_, value) => setKey(value || "")}
             options={options}
             renderInput={(params) => <TextField {...params} />}
+            ListboxComponent={ListboxComponent}
             freeSolo
+            // groupBy={(option) => option[0].toUpperCase()}
+            renderOption={(props, option) => [props, option] as React.ReactNode}
+            // TODO: Post React 18 update - validate this conversion, look like a hidden bug
+            // renderGroup={(params) => params as unknown as React.ReactNode}
           />
         ) : (
           <TextField
@@ -116,6 +145,7 @@ export function Header() {
           aria-label="Add Word"
           onClick={submit}
           variant="contained"
+          disabled={!key || key.length === 0}
         >
           {key in words ? "Change Definition" : "Add Word"}
         </Button>

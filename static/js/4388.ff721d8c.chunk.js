@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[4388],{4388:function(a,p,c){a.exports=c.p+"static/media/polish.18938adc6a663f117af4.txt"}}]);

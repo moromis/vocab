@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[4322],{4322:function(a,e,p){a.exports=p.p+"static/media/bengali.de1ef03ad2a57106446e.txt"}}]);

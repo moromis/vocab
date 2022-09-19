@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[6171],{6171:function(a,p,c){a.exports=c.p+"static/media/albanian.f8d4288fe5a7cdb6f20a.txt"}}]);

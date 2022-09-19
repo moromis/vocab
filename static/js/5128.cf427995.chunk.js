@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[5128],{5128:function(a,e,p){a.exports=p.p+"static/media/turkish.d3d89e199b37ea7660f8.txt"}}]);

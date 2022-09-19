@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[4807],{4807:function(a,c,p){a.exports=p.p+"static/media/slovenian.d5adc438a7558bc9dc55.txt"}}]);

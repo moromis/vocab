@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[6017],{6017:function(a,e,p){a.exports=p.p+"static/media/russian.063de740be0116c72322.txt"}}]);

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[8650],{8650:function(a,p,b){a.exports=b.p+"static/media/kazakh.4db320e8b6592b20363b.txt"}}]);

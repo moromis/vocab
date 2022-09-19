@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[5530],{5530:function(a,c,e){a.exports=e.p+"static/media/catalan.773faefce4927b1b23c7.txt"}}]);

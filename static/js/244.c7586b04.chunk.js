@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[244],{244:function(a,c,p){a.exports=p.p+"static/media/bulgarian.d8620a65283bc5c8ac5e.txt"}}]);

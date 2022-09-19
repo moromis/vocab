@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[2819],{2819:function(e,c,a){e.exports=a.p+"static/media/chinese.eeca55c1fe9fbe4db1e7.txt"}}]);

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[3238],{3238:function(c,p,a){c.exports=a.p+"static/media/spanish.d9d67cbb20b34c457d5c.txt"}}]);

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[5701],{5701:function(a,p,c){a.exports=c.p+"static/media/farsi.58105f418adf918216ca.txt"}}]);

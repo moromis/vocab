@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[3121],{3121:function(a,p,e){a.exports=e.p+"static/media/esperanto.460d6882ab03c266fa73.txt"}}]);

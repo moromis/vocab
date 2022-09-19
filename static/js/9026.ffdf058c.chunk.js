@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[9026],{9026:function(a,e,p){a.exports=p.p+"static/media/greek.7ab7b32cd6694ab31128.txt"}}]);

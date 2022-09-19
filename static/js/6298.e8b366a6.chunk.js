@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[6298],{6298:function(a,c,e){a.exports=e.p+"static/media/lithuanian.170ebc3e024bba29c9ba.txt"}}]);

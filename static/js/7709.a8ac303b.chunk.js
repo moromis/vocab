@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[7709],{7709:function(a,e,p){a.exports=p.p+"static/media/serbian.d481a21ef84f0dac6bf6.txt"}}]);

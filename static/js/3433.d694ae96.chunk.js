@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[3433],{3433:function(a,e,p){a.exports=p.p+"static/media/slovak.a6139feed5fefd475dcb.txt"}}]);

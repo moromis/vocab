@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[9745],{9745:function(a,p,f){a.exports=f.p+"static/media/ukrainian.80773370b84fff8b0ff1.txt"}}]);

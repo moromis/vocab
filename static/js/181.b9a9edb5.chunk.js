@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[181],{181:function(a,p,t){a.exports=t.p+"static/media/latvian.02bcf4792f809f3f9252.txt"}}]);

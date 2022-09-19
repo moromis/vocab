@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[4244],{4244:function(a,c,e){a.exports=e.p+"static/media/afrikaans.4e0da63e60c040802c98.txt"}}]);

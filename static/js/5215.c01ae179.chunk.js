@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[5215],{5215:function(a,p,c){a.exports=c.p+"static/media/danish.20722b57ec5fad4a6bd0.txt"}}]);

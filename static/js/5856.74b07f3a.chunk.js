@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[5856],{5856:function(a,e,p){a.exports=p.p+"static/media/korean.a41414597a5e6b221358.txt"}}]);

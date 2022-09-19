@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[959],{959:function(a,c,e){a.exports=e.p+"static/media/macedonian.360d3e30b57584bc292c.txt"}}]);

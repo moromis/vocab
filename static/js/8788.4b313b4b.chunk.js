@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[8788],{8788:function(a,c,p){a.exports=p.p+"static/media/indonesian.92c1668ff41f02c41f02.txt"}}]);

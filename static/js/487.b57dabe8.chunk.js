@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[487],{487:function(a,e,p){a.exports=p.p+"static/media/swedish.161c53aa3e46e19f01a8.txt"}}]);

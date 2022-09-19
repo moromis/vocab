@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[9035],{9035:function(a,c,p){a.exports=p.p+"static/media/arabic.4a78598795cf295879db.txt"}}]);

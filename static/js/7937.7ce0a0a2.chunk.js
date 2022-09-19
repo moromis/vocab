@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[7937],{7937:function(a,p,t){a.exports=t.p+"static/media/italian.4d53394084e4aff707f5.txt"}}]);

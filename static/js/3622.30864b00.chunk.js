@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[3622],{3622:function(a,e,p){a.exports=p.p+"static/media/romanian.8abf9e0737a4f923ecf2.txt"}}]);

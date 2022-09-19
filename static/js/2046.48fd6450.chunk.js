@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[2046],{2046:function(a,e,p){a.exports=p.p+"static/media/hungarian.e974855678ebc6ed9329.txt"}}]);

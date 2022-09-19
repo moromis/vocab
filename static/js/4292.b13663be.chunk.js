@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[4292],{4292:function(a,p,e){a.exports=e.p+"static/media/norwegian.703968a867f6a7d4ddb9.txt"}}]);

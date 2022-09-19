@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[1505],{1505:function(e,a,p){e.exports=p.p+"static/media/thai.e54e96971e4ed9edd0cb.txt"}}]);

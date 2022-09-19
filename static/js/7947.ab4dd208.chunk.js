@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[7947],{7947:function(a,p,s){a.exports=s.p+"static/media/finnish.0d4694a622d8f736a6aa.txt"}}]);

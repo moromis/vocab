@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvocab_app=self.webpackChunkvocab_app||[]).push([[8962],{8962:function(e,a,p){e.exports=p.p+"static/media/vietnamese.2b819dee405f40511bd1.txt"}}]);

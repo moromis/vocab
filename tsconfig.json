@@ -24,6 +24,8 @@
     "src"
   ],
   "exclude": [
-    "src/data"
+    "src/data",
+    "node_modules",
+    "build"
   ]
 }

@@ -8,11 +8,13 @@ export const getCommonWordsFromLanguage = (l: string) => {
 export interface SettingsState {
   language: string;
   authToken: string | null;
+  wordsPerPage: number;
 }
 
 const initialState: SettingsState = {
   language: "",
   authToken: null,
+  wordsPerPage: 5,
 };
 
 export const settingsSlice = createSlice({
@@ -26,13 +28,19 @@ export const settingsSlice = createSlice({
     setAuthToken: (state, action: PayloadAction<string | null>) => {
       state.authToken = action.payload;
     },
+    setWordsPerPage: (state, action: PayloadAction<number>) => {
+      state.wordsPerPage = action.payload;
+    },
   },
 });
 
-export const { setLanguage, setAuthToken } = settingsSlice.actions;
+export const { setLanguage, setAuthToken, setWordsPerPage } =
+  settingsSlice.actions;
 
 export const selectSettings = (state: RootState) => state.settings;
 export const selectLanguage = (state: RootState) => state.settings.language;
 export const selectAuthToken = (state: RootState) => state.settings.authToken;
+export const selectWordsPerPage = (state: RootState) =>
+  state.settings.wordsPerPage;
 
 export default settingsSlice.reducer;

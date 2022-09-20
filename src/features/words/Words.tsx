@@ -10,8 +10,9 @@ import {
 } from "@mui/material";
 import Fuse from "fuse.js";
 import { useState } from "react";
-import { useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectSearch } from "../search/searchSlice";
+import { selectWordsPerPage, setWordsPerPage } from "../settings/settingsSlice";
 import { Word } from "./Word";
 import "./Words.module.css";
 import { selectWords } from "./wordsSlice";
@@ -22,8 +23,10 @@ const fuseOptions = {
 };
 
 export function Words({ language }: { language?: string }) {
+  const dispatch = useAppDispatch();
   const words = useAppSelector(selectWords);
   const search = useAppSelector(selectSearch);
+  const wordsPerPage = useAppSelector(selectWordsPerPage);
 
   let filteredWords = words;
   if (search.length) {
@@ -35,7 +38,6 @@ export function Words({ language }: { language?: string }) {
   );
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -44,7 +46,7 @@ export function Words({ language }: { language?: string }) {
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    dispatch(setWordsPerPage(parseInt(event.target.value, 10)));
     setPage(0);
   };
 
@@ -66,7 +68,7 @@ export function Words({ language }: { language?: string }) {
             {filteredWords &&
               filteredWords.length &&
               filteredWords
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .slice(page * wordsPerPage, page * wordsPerPage + wordsPerPage)
                 .map((word) => <Word key={word.word} wordInfo={word} />)}
           </TableBody>
         </Table>
@@ -75,7 +77,7 @@ export function Words({ language }: { language?: string }) {
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
         count={Object.values(filteredWords).length || 0}
-        rowsPerPage={rowsPerPage}
+        rowsPerPage={wordsPerPage}
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}

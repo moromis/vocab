@@ -30,6 +30,9 @@ export function Words({ language }: { language?: string }) {
     const fuse = new Fuse(words, fuseOptions);
     filteredWords = fuse.search(search).map((x) => x.item);
   }
+  filteredWords = filteredWords.filter((x) =>
+    language ? x.language === language : true
+  );
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -63,7 +66,6 @@ export function Words({ language }: { language?: string }) {
             {filteredWords &&
               filteredWords.length &&
               filteredWords
-                .filter((x) => (language ? x.language === language : true))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((word) => <Word key={word.word} wordInfo={word} />)}
           </TableBody>

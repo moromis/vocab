@@ -21,7 +21,7 @@ const fuseOptions = {
   keys: ["word", "type", "definition", "valuelanguage"],
 };
 
-export function Words() {
+export function Words({ language }: { language?: string }) {
   const words = useAppSelector(selectWords);
   const search = useAppSelector(selectSearch);
 
@@ -61,6 +61,7 @@ export function Words() {
           </TableHead>
           <TableBody>
             {filteredWords
+              .filter((x) => (language ? x.language === language : true))
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((word) => (
                 <Word key={word.word} wordInfo={word} />

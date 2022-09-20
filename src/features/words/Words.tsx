@@ -32,7 +32,7 @@ export function Words() {
   }
 
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -60,9 +60,11 @@ export function Words() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredWords.map((word) => (
-              <Word key={word.word} wordInfo={word} />
-            ))}
+            {filteredWords
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((word) => (
+                <Word key={word.word} wordInfo={word} />
+              ))}
           </TableBody>
         </Table>
       </TableContainer>

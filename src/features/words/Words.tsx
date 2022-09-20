@@ -21,7 +21,7 @@ const fuseOptions = {
   keys: ["word", "type", "definition", "valuelanguage"],
 };
 
-export function Words() {
+export function Words({ language }: { language?: string }) {
   const words = useAppSelector(selectWords);
   const search = useAppSelector(selectSearch);
 
@@ -60,9 +60,11 @@ export function Words() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredWords.map((word) => (
-              <Word key={word.word} wordInfo={word} />
-            ))}
+            {filteredWords
+              .filter((x) => (language ? x.language === language : true))
+              .map((word) => (
+                <Word key={word.word} wordInfo={word} />
+              ))}
           </TableBody>
         </Table>
       </TableContainer>

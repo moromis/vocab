@@ -60,12 +60,12 @@ export function Words({ language }: { language?: string }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredWords
-              .filter((x) => (language ? x.language === language : true))
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((word) => (
-                <Word key={word.word} wordInfo={word} />
-              ))}
+            {filteredWords &&
+              filteredWords.length &&
+              filteredWords
+                .filter((x) => (language ? x.language === language : true))
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((word) => <Word key={word.word} wordInfo={word} />)}
           </TableBody>
         </Table>
       </TableContainer>

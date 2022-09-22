@@ -58,11 +58,20 @@ export const wordsSlice = createSlice({
     setType: (state, action: PayloadAction<string>) => {
       state.selectedType = action.payload;
     },
+    clearAllDefinitions: (state) => {
+      state.words = state.words.map((x) => R.omit(["definition"], x));
+    },
   },
 });
 
-export const { addWord, changeWord, removeWord, clearWords, setType } =
-  wordsSlice.actions;
+export const {
+  addWord,
+  changeWord,
+  removeWord,
+  clearWords,
+  setType,
+  clearAllDefinitions,
+} = wordsSlice.actions;
 
 export const selectWords = (state: RootState) => state.words.words;
 export const selectType = (state: RootState) => state.words.selectedType;

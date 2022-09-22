@@ -7,18 +7,28 @@ import {
   DialogTitle,
   Divider,
   Grid,
+  SelectProps,
   Typography,
 } from "@mui/material";
 import { useRef, useState } from "react";
-import { useAppDispatch } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { clearLocalStorage } from "../../app/store.logic";
 import { GOOGLE_CLIENT_ID } from "../../features/settings/settings.const";
-import { clearWords } from "../../features/words/wordsSlice";
+import {
+  selectSettings,
+  setNativeLanguage,
+  setVocabularyLanguage,
+} from "../../features/settings/settingsSlice";
+import {
+  clearAllDefinitions,
+  clearWords,
+} from "../../features/words/wordsSlice";
 import { LoginButton } from "../LoginButton/LoginButton";
 import { SelectLanguage } from "../SelectLanguage";
 
 export const Settings = () => {
   const dispatch = useAppDispatch();
+  const settings = useAppSelector(selectSettings);
   const [checkSureDialogOpen, setCheckSureDialogOpen] = useState(false);
   const [dialogText, setDialogText] = useState("");
   const checkSureDialogCallback = useRef<any>(null);
@@ -40,6 +50,22 @@ export const Settings = () => {
   const { signOut } = useGoogleLogout({
     clientId: GOOGLE_CLIENT_ID,
   });
+
+  const changeNativeLanguageCallback: SelectProps<string>["onChange"] = (e) => {
+    const dispatchNativeLanguage = () =>
+      dispatch(setNativeLanguage(e.target.value));
+    if (settings.nativeLanguage && settings.nativeLanguage.length) {
+      checkIfSure(
+        "If you change your native language, all definitions will be cleared and changed to the new language, proceed?",
+        () => {
+          dispatch(clearAllDefinitions());
+          dispatchNativeLanguage();
+        }
+      );
+    } else {
+      dispatchNativeLanguage();
+    }
+  };
 
   return (
     <>
@@ -68,8 +94,36 @@ export const Settings = () => {
         <Grid item>
           <LoginButton />
         </Grid>
+        <Grid
+          item
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          {!settings.nativeLanguage.length && (
+            <Typography color="red" sx={{ marginBottom: 2 }}>
+              {`Please select your native language
+            Don't see it? Email me at `}
+              <a href="mailto:themoromis@gmail.com">themoromis@gmail.com</a>
+            </Typography>
+          )}
+          <SelectLanguage
+            title="Native Language"
+            language={settings.nativeLanguage}
+            onChangeCallback={changeNativeLanguageCallback}
+            required
+          />
+        </Grid>
         <Grid item>
-          <SelectLanguage />
+          <SelectLanguage
+            title="Vocabulary Language"
+            language={settings.vocabLanguage}
+            onChangeCallback={(e) =>
+              dispatch(setVocabularyLanguage(e.target.value))
+            }
+          />
         </Grid>
         <Grid item sx={{ marginTop: 4 }}>
           <Typography color="red">Danger Zone</Typography>

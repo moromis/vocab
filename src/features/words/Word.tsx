@@ -21,8 +21,14 @@ export const Word = ({ wordInfo }: { wordInfo: WordType }) => {
   const dispatch = useAppDispatch();
   const settings = useAppSelector(selectSettings);
 
+  const nativeLanguageISO = ISO_LANGUAGE_CODES[settings.nativeLanguage];
+
   useEffect(() => {
-    if (settings.authToken && !definition && (language || settings.language)) {
+    if (
+      settings.authToken &&
+      !definition &&
+      (language || settings.vocabLanguage)
+    ) {
       // get definition
       fetch("https://translation.googleapis.com/language/translate/v2", {
         method: "POST",
@@ -31,8 +37,8 @@ export const Word = ({ wordInfo }: { wordInfo: WordType }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          source: ISO_LANGUAGE_CODES[language || settings.language],
-          target: "en",
+          source: ISO_LANGUAGE_CODES[language || settings.vocabLanguage],
+          target: nativeLanguageISO,
           q: word,
           format: "text",
         }),
@@ -45,8 +51,8 @@ export const Word = ({ wordInfo }: { wordInfo: WordType }) => {
                 ...wordInfo,
                 definition,
                 language:
-                  settings.language && settings.language.length
-                    ? settings.language
+                  settings.vocabLanguage && settings.vocabLanguage.length
+                    ? settings.vocabLanguage
                     : null,
               })
             );
@@ -58,7 +64,12 @@ export const Word = ({ wordInfo }: { wordInfo: WordType }) => {
           dispatch(setAuthToken(null));
         });
     }
-  }, [settings.authToken]);
+  }, [
+    settings.authToken,
+    settings.vocabLanguage,
+    settings.nativeLanguage,
+    definition,
+  ]);
 
   const remove = () => {
     dispatch(removeWord(word));
@@ -75,30 +86,38 @@ export const Word = ({ wordInfo }: { wordInfo: WordType }) => {
       <TableCell>{titleCase(language || "")}</TableCell>
       <TableCell>{titleCase(type)}</TableCell>
       <TableCell>{word}</TableCell>
-      <TableCell sx={{ ...(definition ? {} : { justifyContent: "center" }) }}>
-        {definition || (
-          <Tooltip
-            title={
-              <Typography sx={{ fontSize: "1rem" }}>
-                Login to Google in settings to automatically add definitions
-              </Typography>
-            }
-            arrow
+      {settings.vocabLanguage === settings.nativeLanguage ? (
+        <TableCell>-</TableCell>
+      ) : (
+        <TableCell sx={{ ...(definition ? {} : { justifyContent: "center" }) }}>
+          {definition || (
+            <Tooltip
+              title={
+                <Typography sx={{ fontSize: "1rem" }}>
+                  Login to Google in settings to automatically add definitions
+                </Typography>
+              }
+              arrow
+            >
+              <Help />
+            </Tooltip>
+          )}
+        </TableCell>
+      )}
+      {settings.vocabLanguage === settings.nativeLanguage ? (
+        <TableCell>-</TableCell>
+      ) : (
+        <TableCell>
+          <Link
+            href={`https://translate.google.com/?sl=${
+              ISO_LANGUAGE_CODES[language || settings.vocabLanguage]
+            }&tl=${nativeLanguageISO}&text=${word}&op=translate`}
+            target="_blank"
           >
-            <Help />
-          </Tooltip>
-        )}
-      </TableCell>
-      <TableCell>
-        <Link
-          href={`https://translate.google.com/?sl=${
-            ISO_LANGUAGE_CODES[language || settings.language]
-          }&tl=en&text=${word}&op=translate`}
-          target="_blank"
-        >
-          Translation
-        </Link>
-      </TableCell>
+            Translation
+          </Link>
+        </TableCell>
+      )}
       <TableCell sx={{ display: "flex", justifyContent: "center" }}>
         <IconButton onClick={remove}>
           <Close />

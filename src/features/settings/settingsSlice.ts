@@ -6,13 +6,15 @@ export const getCommonWordsFromLanguage = (l: string) => {
 };
 
 export interface SettingsState {
-  language: string;
+  nativeLanguage: string;
+  vocabLanguage: string;
   authToken: string | null;
   wordsPerPage: number;
 }
 
 const initialState: SettingsState = {
-  language: "",
+  nativeLanguage: "",
+  vocabLanguage: "",
   authToken: null,
   wordsPerPage: 5,
 };
@@ -22,8 +24,11 @@ export const settingsSlice = createSlice({
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    setLanguage: (state, action: PayloadAction<string>) => {
-      state.language = action.payload;
+    setNativeLanguage: (state, action: PayloadAction<string>) => {
+      state.nativeLanguage = action.payload;
+    },
+    setVocabularyLanguage: (state, action: PayloadAction<string>) => {
+      state.vocabLanguage = action.payload;
     },
     setAuthToken: (state, action: PayloadAction<string | null>) => {
       state.authToken = action.payload;
@@ -34,11 +39,18 @@ export const settingsSlice = createSlice({
   },
 });
 
-export const { setLanguage, setAuthToken, setWordsPerPage } =
-  settingsSlice.actions;
+export const {
+  setNativeLanguage,
+  setVocabularyLanguage,
+  setAuthToken,
+  setWordsPerPage,
+} = settingsSlice.actions;
 
 export const selectSettings = (state: RootState) => state.settings;
-export const selectLanguage = (state: RootState) => state.settings.language;
+export const selectNativeLanguage = (state: RootState) =>
+  state.settings.nativeLanguage;
+export const selectVocabLanguage = (state: RootState) =>
+  state.settings.vocabLanguage;
 export const selectAuthToken = (state: RootState) => state.settings.authToken;
 export const selectWordsPerPage = (state: RootState) =>
   state.settings.wordsPerPage;

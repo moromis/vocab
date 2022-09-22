@@ -8,11 +8,16 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
+import { useAppSelector } from "../../app/hooks";
+import { selectNativeLanguage } from "../../features/settings/settingsSlice";
 import { CustomTransition } from "../CustomTransition";
 import { Settings } from "../Settings/Settings";
 
 export const SettingsDialog = () => {
-  const [settingsDialogOpen, setSettingsDialogOpen] = useState<boolean>(false);
+  const nativeLanguage = useAppSelector(selectNativeLanguage);
+  const [settingsDialogOpen, setSettingsDialogOpen] = useState<boolean>(
+    !nativeLanguage.length
+  );
 
   const handleOpen = () => {
     setSettingsDialogOpen(true);
@@ -36,7 +41,7 @@ export const SettingsDialog = () => {
       <Dialog
         fullScreen
         open={settingsDialogOpen}
-        onClose={handleClose}
+        onClose={nativeLanguage.length ? handleClose : undefined}
         TransitionComponent={CustomTransition}
       >
         <AppBar sx={{ position: "relative" }}>
@@ -46,13 +51,19 @@ export const SettingsDialog = () => {
               color="inherit"
               onClick={handleClose}
               aria-label="close"
+              disabled={!nativeLanguage.length}
             >
               <Close />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               Settings
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
+            <Button
+              autoFocus
+              color="inherit"
+              onClick={handleClose}
+              disabled={!nativeLanguage.length}
+            >
               Done
             </Button>
           </Toolbar>

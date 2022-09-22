@@ -50,7 +50,13 @@ export function Header() {
         alignItems="flex-end"
         sx={{ marginBottom: { xs: 2, md: 0 } }}
       >
-        <Grid item container justifyContent="flex-end" alignItems="center">
+        <Grid
+          item
+          container
+          justifyContent="flex-end"
+          alignItems="center"
+          sx={{ marginBottom: 2 }}
+        >
           <Box sx={{ marginRight: 2 }}>
             <LoginButton />
           </Box>

@@ -15,6 +15,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   getCommonWordsFromLanguage,
   selectSettings,
+  setVocabularyLanguage,
 } from "../../features/settings/settingsSlice";
 import {
   addWord,
@@ -38,19 +39,19 @@ const StyledPopper = styled(Popper)({
 
 export const AddWord = () => {
   const type = useAppSelector(selectType);
-  const { language } = useAppSelector(selectSettings);
+  const { vocabLanguage } = useAppSelector(selectSettings);
   const words = useAppSelector(selectWords);
   const [key, setKey] = useState("");
   const [options, setOptions] = useState<string[] | null>(null);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (language && language.length) {
-      getCommonWordsFromLanguage(language).then((res: any) => {
+    if (vocabLanguage && vocabLanguage.length) {
+      getCommonWordsFromLanguage(vocabLanguage).then((res: any) => {
         setOptions(res);
       });
     }
-  }, [language]);
+  }, [vocabLanguage]);
 
   const submit = () => {
     setKey("");
@@ -58,7 +59,7 @@ export const AddWord = () => {
       addWord({
         word: key,
         type,
-        language: language && language.length ? language : null,
+        language: vocabLanguage && vocabLanguage.length ? vocabLanguage : null,
       })
     );
   };
@@ -75,7 +76,13 @@ export const AddWord = () => {
       }}
     >
       <Box sx={{ marginBottom: 2, display: "flex", alignItems: "center" }}>
-        <SelectLanguage />
+        <SelectLanguage
+          title="Language"
+          language={vocabLanguage}
+          onChangeCallback={(e) =>
+            dispatch(setVocabularyLanguage(e.target.value))
+          }
+        />
       </Box>
       <Box sx={{ marginBottom: 2, display: "flex", alignItems: "center" }}>
         <InputLabel htmlFor="type" sx={{ marginRight: 2 }}>

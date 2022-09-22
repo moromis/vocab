@@ -110,7 +110,7 @@ export const Settings = () => {
             </Typography>
           )}
           <SelectLanguage
-            title="Native Language"
+            title="Native Language (I know...)"
             language={settings.nativeLanguage}
             onChangeCallback={changeNativeLanguageCallback}
             required
@@ -118,7 +118,7 @@ export const Settings = () => {
         </Grid>
         <Grid item>
           <SelectLanguage
-            title="Vocabulary Language"
+            title="Vocabulary Language (I'm learning...)"
             language={settings.vocabLanguage}
             onChangeCallback={(e) =>
               dispatch(setVocabularyLanguage(e.target.value))

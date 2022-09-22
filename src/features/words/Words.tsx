@@ -64,13 +64,15 @@ export function Words({ language }: { language?: string }) {
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {filteredWords &&
-              filteredWords.length &&
-              filteredWords
+          {filteredWords.length ? (
+            <TableBody>
+              {filteredWords
                 .slice(page * wordsPerPage, page * wordsPerPage + wordsPerPage)
-                .map((word) => <Word key={word.word} wordInfo={word} />)}
-          </TableBody>
+                .map((word) => (
+                  <Word key={word.word} wordInfo={word} />
+                ))}
+            </TableBody>
+          ) : null}
         </Table>
       </TableContainer>
       <TablePagination

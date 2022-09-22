@@ -1,11 +1,9 @@
-import { useGoogleLogin } from "@leecheuk/react-google-login";
-import { Close, Settings as SettingsIcon } from "@mui/icons-material";
+import { Close } from "@mui/icons-material";
 import {
-  AppBar,
   Autocomplete,
   autocompleteClasses,
   Button,
-  Dialog,
+  Grid,
   IconButton,
   InputLabel,
   MenuItem,
@@ -14,21 +12,14 @@ import {
   Select,
   styled,
   TextField,
-  Toolbar,
-  Typography,
 } from "@mui/material";
-import Slide from "@mui/material/Slide";
-import { TransitionProps } from "@mui/material/transitions";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectSearch, setSearch } from "../../features/search/searchSlice";
-import { Settings } from "../../features/settings/Settings";
-import { GOOGLE_CLIENT_ID } from "../../features/settings/settings.const";
 import {
   getCommonWordsFromLanguage,
   selectSettings,
-  setAuthToken,
 } from "../../features/settings/settingsSlice";
 import {
   addWord,
@@ -37,18 +28,11 @@ import {
   selectWords,
   setType,
 } from "../../features/words/wordsSlice";
+import { LoginButton } from "../LoginButton/LoginButton";
 import { SelectLanguage } from "../SelectLanguage";
+import { SettingsDialog } from "../Settings/SettingsDialog";
 import styles from "./Header.module.css";
 import { ListboxComponent } from "./ListboxComponent";
-
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement;
-  },
-  ref: React.Ref<unknown>
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 const StyledPopper = styled(Popper)({
   [`& .${autocompleteClasses.listbox}`]: {
@@ -63,12 +47,11 @@ const StyledPopper = styled(Popper)({
 export function Header() {
   const words = useAppSelector(selectWords);
   const type = useAppSelector(selectType);
-  const { language, authToken } = useAppSelector(selectSettings);
+  const { language } = useAppSelector(selectSettings);
   const search = useAppSelector(selectSearch);
   const dispatch = useAppDispatch();
 
   const [key, setKey] = useState("");
-  const [settingsDialogOpen, setSettingsDialogOpen] = useState<boolean>(false);
   const [options, setOptions] = useState<string[] | null>(null);
 
   useEffect(() => {
@@ -78,14 +61,6 @@ export function Header() {
       });
     }
   }, [language]);
-
-  const handleOpen = () => {
-    setSettingsDialogOpen(true);
-  };
-
-  const handleClose = () => {
-    setSettingsDialogOpen(false);
-  };
 
   const submit = () => {
     setKey("");
@@ -97,23 +72,6 @@ export function Header() {
       })
     );
   };
-
-  const onLoginSuccess = (res: any) => {
-    if (!authToken) {
-      console.log("success:", res);
-      dispatch(setAuthToken(res.accessToken));
-    }
-  };
-  const { signIn } = useGoogleLogin({
-    clientId: GOOGLE_CLIENT_ID,
-    onSuccess: onLoginSuccess,
-  });
-
-  useEffect(() => {
-    if (!authToken) {
-      signIn();
-    }
-  }, []);
 
   return (
     <div className={styles.header}>
@@ -176,53 +134,26 @@ export function Header() {
           <p style={{ color: "red" }}>Word is already in dictionary</p>
         )}
       </div>
-      <div>
-        <OutlinedInput
-          placeholder="Search"
-          endAdornment={
-            <IconButton>
-              <Close />
-            </IconButton>
-          }
-          value={search}
-          onChange={(e) => dispatch(setSearch(e.target.value))}
-        />
-        <IconButton
-          id="settings-button"
-          onClick={handleOpen}
-          aria-controls={settingsDialogOpen ? "settings-dialog" : undefined}
-          aria-haspopup="true"
-          aria-expanded={settingsDialogOpen ? "true" : undefined}
-        >
-          <SettingsIcon fontSize="large" />
-        </IconButton>
-      </div>
-      <Dialog
-        fullScreen
-        open={settingsDialogOpen}
-        onClose={handleClose}
-        TransitionComponent={Transition}
-      >
-        <AppBar sx={{ position: "relative" }}>
-          <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={handleClose}
-              aria-label="close"
-            >
-              <Close />
-            </IconButton>
-            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              Settings
-            </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
-              Done
-            </Button>
-          </Toolbar>
-        </AppBar>
-        <Settings />
-      </Dialog>
+      <Grid container direction="column" spacing={1} alignItems="flex-end">
+        <Grid item container justifyContent="flex-end" alignItems="center">
+          <Box sx={{ marginRight: 2 }}>
+            <LoginButton />
+          </Box>
+          <SettingsDialog />
+        </Grid>
+        <Grid item>
+          <OutlinedInput
+            placeholder="Search"
+            endAdornment={
+              <IconButton>
+                <Close />
+              </IconButton>
+            }
+            value={search}
+            onChange={(e) => dispatch(setSearch(e.target.value))}
+          />
+        </Grid>
+      </Grid>
     </div>
   );
 }

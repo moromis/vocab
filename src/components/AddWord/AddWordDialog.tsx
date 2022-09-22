@@ -1,4 +1,4 @@
-import { Close, Settings as SettingsIcon } from "@mui/icons-material";
+import { Close } from "@mui/icons-material";
 import {
   AppBar,
   Button,
@@ -9,33 +9,35 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { CustomTransition } from "../CustomTransition";
-import { Settings } from "../Settings/Settings";
+import { AddWord } from "./AddWord";
 
-export const SettingsDialog = () => {
-  const [settingsDialogOpen, setSettingsDialogOpen] = useState<boolean>(false);
+export const AddWordDialog = ({ fullWidth }: { fullWidth?: boolean }) => {
+  const [addwordDialogOpen, setAddWordDialogOpen] = useState<boolean>(false);
 
   const handleOpen = () => {
-    setSettingsDialogOpen(true);
+    setAddWordDialogOpen(true);
   };
 
   const handleClose = () => {
-    setSettingsDialogOpen(false);
+    setAddWordDialogOpen(false);
   };
 
   return (
     <>
-      <IconButton
-        id="settings-button"
+      <Button
+        id="add-word-button"
         onClick={handleOpen}
-        aria-controls={settingsDialogOpen ? "settings-dialog" : undefined}
+        aria-controls={addwordDialogOpen ? "add-word-dialog" : undefined}
         aria-haspopup="true"
-        aria-expanded={settingsDialogOpen ? "true" : undefined}
+        aria-expanded={addwordDialogOpen ? "true" : undefined}
+        variant="contained"
+        fullWidth={fullWidth}
       >
-        <SettingsIcon fontSize="large" />
-      </IconButton>
+        Add Words
+      </Button>
       <Dialog
         fullScreen
-        open={settingsDialogOpen}
+        open={addwordDialogOpen}
         onClose={handleClose}
         TransitionComponent={CustomTransition}
       >
@@ -50,14 +52,14 @@ export const SettingsDialog = () => {
               <Close />
             </IconButton>
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-              Settings
+              Add Words
             </Typography>
             <Button autoFocus color="inherit" onClick={handleClose}>
               Done
             </Button>
           </Toolbar>
         </AppBar>
-        <Settings />
+        <AddWord />
       </Dialog>
     </>
   );

@@ -12,7 +12,7 @@ export const SelectLanguage = () => {
 
   return (
     <>
-      <InputLabel id="label" sx={{ marginRight: 1 }}>
+      <InputLabel id="label" sx={{ marginRight: 2 }}>
         Language
       </InputLabel>
       <Select

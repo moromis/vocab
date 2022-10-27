@@ -12,14 +12,20 @@ export const partsOfSpeech = [
   "preposition",
 ];
 
+export type Order = "asc" | "desc";
+
 export interface WordsState {
   words: WordType[];
   selectedType: string;
+  order: Order;
+  orderBy: keyof WordType;
 }
 
 const initialState: WordsState = {
   words: [],
   selectedType: partsOfSpeech[0],
+  order: "asc",
+  orderBy: "added",
 };
 
 export const wordsSlice = createSlice({
@@ -61,6 +67,12 @@ export const wordsSlice = createSlice({
     clearAllDefinitions: (state) => {
       state.words = state.words.map((x) => R.omit(["definition"], x));
     },
+    setOrderBy: (state, action: PayloadAction<keyof WordType>) => {
+      state.orderBy = action.payload;
+    },
+    setOrdering: (state, action: PayloadAction<Order>) => {
+      state.order = action.payload;
+    },
   },
 });
 
@@ -71,9 +83,13 @@ export const {
   clearWords,
   setType,
   clearAllDefinitions,
+  setOrderBy,
+  setOrdering,
 } = wordsSlice.actions;
 
 export const selectWords = (state: RootState) => state.words.words;
 export const selectType = (state: RootState) => state.words.selectedType;
+export const selectOrdering = (state: RootState) => state.words.order;
+export const selectOrderBy = (state: RootState) => state.words.orderBy;
 
 export default wordsSlice.reducer;

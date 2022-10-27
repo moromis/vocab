@@ -19,7 +19,14 @@ import { selectWordsPerPage, setWordsPerPage } from "../settings/settingsSlice";
 import { Word } from "./Word";
 import "./Words.module.css";
 import { WordType } from "./words.types";
-import { selectWords } from "./wordsSlice";
+import {
+  Order,
+  selectOrderBy,
+  selectOrdering,
+  selectWords,
+  setOrderBy,
+  setOrdering,
+} from "./wordsSlice";
 
 const fuseOptions = {
   // Search in `author` and in `tags` array
@@ -35,8 +42,6 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   }
   return 0;
 }
-
-type Order = "asc" | "desc";
 
 function getComparator<T>(
   order: Order,
@@ -135,9 +140,9 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 }
 
 export function Words({ language }: { language?: string }) {
-  const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] = useState<keyof WordType>("type");
   const dispatch = useAppDispatch();
+  const order = useAppSelector(selectOrdering);
+  const orderBy = useAppSelector(selectOrderBy);
   const words = useAppSelector(selectWords);
   const search = useAppSelector(selectSearch);
   const wordsPerPage = useAppSelector(selectWordsPerPage);
@@ -147,8 +152,8 @@ export function Words({ language }: { language?: string }) {
     property: keyof WordType
   ) => {
     const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
+    dispatch(setOrdering(isAsc ? "desc" : "asc"));
+    dispatch(setOrderBy(property));
   };
 
   let filteredWords = words;

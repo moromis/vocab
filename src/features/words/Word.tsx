@@ -45,17 +45,19 @@ export const Word = ({ wordInfo }: { wordInfo: WordType }) => {
       })
         .then((res) => {
           res.json().then((jsonData) => {
-            const definition = jsonData.data.translations[0].translatedText;
-            dispatch(
-              changeWord({
-                ...wordInfo,
-                definition,
-                language:
-                  settings.vocabLanguage && settings.vocabLanguage.length
-                    ? settings.vocabLanguage
-                    : null,
-              })
-            );
+            if (jsonData?.data) {
+              const definition = jsonData.data.translations[0].translatedText;
+              dispatch(
+                changeWord({
+                  ...wordInfo,
+                  definition,
+                  language:
+                    settings.vocabLanguage && settings.vocabLanguage.length
+                      ? settings.vocabLanguage
+                      : null,
+                })
+              );
+            }
           });
         })
         .catch((e) => {

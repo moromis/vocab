@@ -1,4 +1,5 @@
 import {
+  Box,
   Paper,
   Table,
   TableBody,
@@ -7,7 +8,9 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TableSortLabel,
 } from "@mui/material";
+import { visuallyHidden } from "@mui/utils";
 import Fuse from "fuse.js";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -15,18 +18,132 @@ import { selectSearch } from "../search/searchSlice";
 import { selectWordsPerPage, setWordsPerPage } from "../settings/settingsSlice";
 import { Word } from "./Word";
 import "./Words.module.css";
+import { WordType } from "./words.types";
 import { selectWords } from "./wordsSlice";
 
 const fuseOptions = {
   // Search in `author` and in `tags` array
-  keys: ["word", "type", "definition", "valuelanguage"],
+  keys: ["word", "type", "definition", "value", "language"],
 };
 
+function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+type Order = "asc" | "desc";
+
+function getComparator<T>(
+  order: Order,
+  orderBy: keyof T
+): (a: T, b: T) => number {
+  return order === "desc"
+    ? (a, b) => descendingComparator<T>(a, b, orderBy)
+    : (a, b) => -descendingComparator<T>(a, b, orderBy);
+}
+
+interface HeadCell {
+  disablePadding: boolean;
+  id: keyof WordType;
+  label: string;
+  numeric: boolean;
+}
+
+const headCells: readonly HeadCell[] = [
+  {
+    id: "language",
+    numeric: false,
+    disablePadding: true,
+    label: "Language",
+  },
+  {
+    id: "type",
+    numeric: false,
+    disablePadding: false,
+    label: "Part of Speech",
+  },
+  {
+    id: "word",
+    numeric: false,
+    disablePadding: false,
+    label: "Word",
+  },
+  {
+    id: "definition",
+    numeric: false,
+    disablePadding: false,
+    label: "Definition",
+  },
+];
+interface EnhancedTableProps {
+  onRequestSort: (
+    event: React.MouseEvent<unknown>,
+    property: keyof WordType
+  ) => void;
+  order: Order;
+  orderBy: string;
+  rowCount: number;
+}
+
+function EnhancedTableHead(props: EnhancedTableProps) {
+  const { order, orderBy, onRequestSort } = props;
+  const createSortHandler =
+    (property: keyof WordType) => (event: React.MouseEvent<unknown>) => {
+      onRequestSort(event, property);
+    };
+
+  return (
+    <TableHead>
+      <TableRow>
+        {headCells.map((headCell) => (
+          <TableCell
+            key={headCell.id}
+            align={headCell.numeric ? "right" : "left"}
+            padding={headCell.disablePadding ? "none" : "normal"}
+            sortDirection={orderBy === headCell.id ? order : false}
+          >
+            <TableSortLabel
+              active={orderBy === headCell.id}
+              direction={orderBy === headCell.id ? order : "asc"}
+              onClick={createSortHandler(headCell.id)}
+            >
+              {headCell.label}
+              {orderBy === headCell.id ? (
+                <Box component="span" sx={visuallyHidden}>
+                  {order === "desc" ? "sorted descending" : "sorted ascending"}
+                </Box>
+              ) : null}
+            </TableSortLabel>
+          </TableCell>
+        ))}
+        <TableCell>Link</TableCell>
+        <TableCell align="center">Delete</TableCell>
+      </TableRow>
+    </TableHead>
+  );
+}
+
 export function Words({ language }: { language?: string }) {
+  const [order, setOrder] = useState<Order>("asc");
+  const [orderBy, setOrderBy] = useState<keyof WordType>("type");
   const dispatch = useAppDispatch();
   const words = useAppSelector(selectWords);
   const search = useAppSelector(selectSearch);
   const wordsPerPage = useAppSelector(selectWordsPerPage);
+
+  const handleRequestSort = (
+    event: React.MouseEvent<unknown>,
+    property: keyof WordType
+  ) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
 
   let filteredWords = words;
   if (search.length) {
@@ -46,6 +163,7 @@ export function Words({ language }: { language?: string }) {
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    console.log("setting to ", parseInt(event.target.value, 10));
     dispatch(setWordsPerPage(parseInt(event.target.value, 10)));
     setPage(0);
   };
@@ -54,20 +172,22 @@ export function Words({ language }: { language?: string }) {
     <>
       <TableContainer component={Paper}>
         <Table size="small">
-          <TableHead>
-            <TableRow sx={{ background: "dark-grey" }}>
-              <TableCell>Language</TableCell>
-              <TableCell>Part of Speech</TableCell>
-              <TableCell>Word</TableCell>
-              <TableCell>Definition</TableCell>
-              <TableCell>Link</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
+          <EnhancedTableHead
+            order={order}
+            orderBy={orderBy}
+            onRequestSort={handleRequestSort}
+            rowCount={filteredWords.length}
+          />
           {filteredWords.length ? (
             <TableBody>
-              {filteredWords
-                .slice(page * wordsPerPage, page * wordsPerPage + wordsPerPage)
+              {(wordsPerPage > 0
+                ? filteredWords.slice(
+                    page * wordsPerPage,
+                    page * wordsPerPage + wordsPerPage
+                  )
+                : filteredWords
+              )
+                .sort(getComparator<WordType>(order, orderBy))
                 .map((word) => (
                   <Word key={word.word} wordInfo={word} />
                 ))}
@@ -76,7 +196,7 @@ export function Words({ language }: { language?: string }) {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
+        rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
         component="div"
         count={Object.values(filteredWords).length || 0}
         rowsPerPage={wordsPerPage}

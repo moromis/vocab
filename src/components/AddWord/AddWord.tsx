@@ -57,6 +57,7 @@ export const AddWord = () => {
     setKey("");
     dispatch(
       addWord({
+        added: Date.now(),
         word: key,
         type,
         language: vocabLanguage && vocabLanguage.length ? vocabLanguage : null,

@@ -17,7 +17,7 @@ import { WordType } from "./words.types";
 import { changeWord, removeWord } from "./wordsSlice";
 
 export const Word = ({ wordInfo }: { wordInfo: WordType }) => {
-  const { definition, language, type, word } = wordInfo;
+  const { added, definition, language, type, word } = wordInfo;
   const dispatch = useAppDispatch();
   const settings = useAppSelector(selectSettings);
 
@@ -85,6 +85,7 @@ export const Word = ({ wordInfo }: { wordInfo: WordType }) => {
 
   return (
     <StyledTableRow>
+      <TableCell>{new Date(added).toDateString()}</TableCell>
       <TableCell>{titleCase(language || "")}</TableCell>
       <TableCell>{titleCase(type)}</TableCell>
       <TableCell>{word}</TableCell>

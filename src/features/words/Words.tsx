@@ -1,26 +1,21 @@
 import {
-  Box,
   Paper,
   Table,
   TableBody,
-  TableCell,
   TableContainer,
-  TableHead,
   TablePagination,
-  TableRow,
-  TableSortLabel,
 } from "@mui/material";
-import { visuallyHidden } from "@mui/utils";
 import Fuse from "fuse.js";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectSearch } from "../search/searchSlice";
 import { selectWordsPerPage, setWordsPerPage } from "../settings/settingsSlice";
+import { EnhancedTableHead } from "./EnhancedTableHead";
+import { getComparator } from "./getComparator";
 import { Word } from "./Word";
 import "./Words.module.css";
 import { WordType } from "./words.types";
 import {
-  Order,
   selectOrderBy,
   selectOrdering,
   selectWords,
@@ -28,116 +23,10 @@ import {
   setOrdering,
 } from "./wordsSlice";
 
-const fuseOptions = {
-  // Search in `author` and in `tags` array
-  keys: ["word", "type", "definition", "value", "language"],
+const fuseOptions: Fuse.IFuseOptions<WordType> = {
+  keys: ["word", "definition"],
+  threshold: 0.1,
 };
-
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator<T>(
-  order: Order,
-  orderBy: keyof T
-): (a: T, b: T) => number {
-  return order === "desc"
-    ? (a, b) => descendingComparator<T>(a, b, orderBy)
-    : (a, b) => -descendingComparator<T>(a, b, orderBy);
-}
-
-interface HeadCell {
-  disablePadding: boolean;
-  id: keyof WordType;
-  label: string;
-  numeric: boolean;
-}
-
-const headCells: readonly HeadCell[] = [
-  {
-    id: "added",
-    numeric: false,
-    disablePadding: false,
-    label: "Date Added",
-  },
-  {
-    id: "language",
-    numeric: false,
-    disablePadding: false,
-    label: "Language",
-  },
-  {
-    id: "type",
-    numeric: false,
-    disablePadding: false,
-    label: "Part of Speech",
-  },
-  {
-    id: "word",
-    numeric: false,
-    disablePadding: false,
-    label: "Word",
-  },
-  {
-    id: "definition",
-    numeric: false,
-    disablePadding: false,
-    label: "Definition",
-  },
-];
-interface EnhancedTableProps {
-  onRequestSort: (
-    event: React.MouseEvent<unknown>,
-    property: keyof WordType
-  ) => void;
-  order: Order;
-  orderBy: string;
-  rowCount: number;
-}
-
-function EnhancedTableHead(props: EnhancedTableProps) {
-  const { order, orderBy, onRequestSort } = props;
-  const createSortHandler =
-    (property: keyof WordType) => (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property);
-    };
-
-  return (
-    <TableHead>
-      <TableRow>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "normal"}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-        <TableCell>Link</TableCell>
-        <TableCell align="center">Delete</TableCell>
-      </TableRow>
-    </TableHead>
-  );
-}
 
 export function Words({ language }: { language?: string }) {
   const dispatch = useAppDispatch();

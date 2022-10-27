@@ -1,3 +1,5 @@
+export type Order = "asc" | "desc";
+
 export type WordType = {
   added: number;
   type: string;

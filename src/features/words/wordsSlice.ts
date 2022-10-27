@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import * as R from "ramda";
 import { RootState } from "../../app/store";
-import { WordType } from "./words.types";
+import { Order, WordType } from "./words.types";
 
 export const partsOfSpeech = [
   "unknown",
@@ -11,8 +11,6 @@ export const partsOfSpeech = [
   "adjective",
   "preposition",
 ];
-
-export type Order = "asc" | "desc";
 
 export interface WordsState {
   words: WordType[];
